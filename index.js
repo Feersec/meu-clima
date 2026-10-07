@@ -1,50 +1,54 @@
-// Passo 1: Importar a biblioteca axios para fazer as chamadas HTTP
 const axios = require('axios');
 
-// Passo 2: Pegar a cidade da linha de comando
-// process.argv é um array que contém os argumentos da linha de comando.
-// O primeiro é o node, o segundo é o nome do arquivo, o terceiro é o nosso argumento.
-const cidade = process.argv[2];
+const cidade = process.argv.slice(2).join(' ').trim();
+const apiKey = process.env.OPENWEATHER_API_KEY;
 
-// Verifica se o usuário digitou uma cidade
 if (!cidade) {
-    console.log("Por favor, forneça o nome de uma cidade.");
-    // Encerra o programa se nenhuma cidade for fornecida
-    process.exit(1); 
+  console.error('Uso: node index.js "Nome da Cidade"');
+  process.exit(1);
 }
 
-// Passo 3: Configurar suas informações da API
-const apiKey = '216a70e8ba9bc851330a02c7837cdc37';
-const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cidade}&appid=${apiKey}&units=metric&lang=pt_br`;
+if (!apiKey) {
+  console.error('Erro: defina a variável de ambiente OPENWEATHER_API_KEY antes de executar.');
+  process.exit(1);
+}
 
-// Passo 4: Fazer a chamada para a API
-axios.get(apiUrl )
-    .then(response => {
-        // Se a chamada for bem-sucedida, o .then() é executado
-        
-        // Extraímos os dados que nos interessam da resposta da API
-        const clima = response.data;
-        const temperatura = clima.main.temp;
-        const sensacaoTermica = clima.main.feels_like;
-        const descricao = clima.weather[0].description;
-        const nomeCidade = clima.name;
-        const pais = clima.sys.country;
+const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
-        // Exibe os resultados de forma organizada
-        console.log("--------------------------------");
-        console.log(`Clima em: ${nomeCidade}, ${pais}`);
-        console.log(`Temperatura: ${temperatura}°C`);
-        console.log(`Sensação Térmica: ${sensacaoTermica}°C`);
-        console.log(`Descrição: ${descricao.charAt(0).toUpperCase() + descricao.slice(1)}`);
-        console.log("--------------------------------");
-    })
-    .catch(error => {
-        // Se ocorrer um erro (ex: cidade não encontrada), o .catch() é executado
-        if (error.response && error.response.status === 404) {
-            console.log("Erro: Cidade não encontrada. Verifique o nome e tente novamente.");
-        } else {
-            console.log("Ocorreu um erro ao buscar o clima. Detalhes:");
-            // Imprime o erro para nos ajudar a depurar
-            console.error(error.message); 
-        }
-    });
+axios.get(apiUrl, {
+  params: {
+    q: cidade,
+    appid: apiKey,
+    units: 'metric',
+    lang: 'pt_br'
+  },
+  timeout: 10000
+})
+  .then((response) => {
+    const clima = response.data;
+    const temperatura = clima.main.temp;
+    const sensacaoTermica = clima.main.feels_like;
+    const descricao = clima.weather[0].description;
+    const nomeCidade = clima.name;
+    const pais = clima.sys.country;
+
+    console.log('--------------------------------');
+    console.log(`Clima em: ${nomeCidade}, ${pais}`);
+    console.log(`Temperatura: ${temperatura}°C`);
+    console.log(`Sensação térmica: ${sensacaoTermica}°C`);
+    console.log(`Descrição: ${descricao.charAt(0).toUpperCase() + descricao.slice(1)}`);
+    console.log('--------------------------------');
+  })
+  .catch((error) => {
+    if (error.response?.status === 404) {
+      console.error('Erro: cidade não encontrada. Verifique o nome e tente novamente.');
+      return;
+    }
+
+    if (error.response?.status === 401) {
+      console.error('Erro: chave da API inválida ou não autorizada.');
+      return;
+    }
+
+    console.error('Não foi possível consultar o clima:', error.message);
+  });
