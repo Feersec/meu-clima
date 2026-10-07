@@ -1,51 +1,61 @@
-# 🌦️ Meu Clima - Consultor de Previsão do Tempo
+# 🌦️ Meu Clima
 
-Um simples e eficiente consultor de previsão do tempo via linha de comando, construído com Node.js. Este projeto foi desenvolvido como parte do meu portfólio de estudos, com foco em consumo de APIs externas e manipulação de dados.
+Aplicação de linha de comando em **Node.js** para consultar o clima atual de uma cidade usando a API do **OpenWeatherMap**.
 
-## ✨ Funcionalidades
+Projeto de estudo voltado a consumo de APIs REST, tratamento de erros e uso seguro de credenciais por variável de ambiente.
 
--   Consulta a temperatura atual de qualquer cidade do mundo.
--   Informa a sensação térmica.
--   Exibe uma breve descrição do clima (ex: "Parcialmente nublado", "Chuva leve").
--   Tratamento de erros para cidades não encontradas ou problemas de conexão.
+## Funcionalidades
 
-## 🛠️ Tecnologias Utilizadas
+- Consulta de temperatura atual e sensação térmica
+- Descrição do clima em português
+- Exibição de cidade e país retornados pela API
+- Tratamento de cidade não encontrada, chave inválida e falhas de conexão
+- Chave da API mantida fora do código-fonte
 
--   **[Node.js](https://nodejs.org/en/ )**: Ambiente de execução para o JavaScript no lado do servidor.
--   **[Axios](https://axios-http.com/ )**: Biblioteca para fazer requisições HTTP para a API de clima.
--   **[WeatherAPI](https://www.weatherapi.com/ )**: API utilizada para fornecer os dados de previsão do tempo.
+## Tecnologias
 
-## 🚀 Como Executar o Projeto
+- JavaScript
+- Node.js
+- Axios
+- OpenWeatherMap API
 
-Para executar este projeto localmente, siga os passos abaixo:
+## Como executar
 
-### Pré-requisitos
-
--   Você precisa ter o [Node.js](https://nodejs.org/en/ ) instalado na sua máquina.
--   Você precisa de uma chave de API gratuita da [WeatherAPI](https://www.weatherapi.com/ ).
-
-### Instalação
-
-1.  Clone o repositório para a sua máquina local:
-    ```bash
-    git clone https://github.com/Feersec/meu-clima.git
-    ```
-
-2.  Navegue até a pasta do projeto:
-    ```bash
-    cd meu-clima
-    ```
-
-3.  Instale as dependências necessárias:
-    ```bash
-    npm install
-    ```
-
-4.  **Importante:** Renomeie o arquivo `index.js` e adicione sua chave da API na constante `apiKey`.
-
-### Execução
-
-Para ver a previsão do tempo, execute o comando abaixo no seu terminal, substituindo `"Nome da Cidade"` pela cidade que você deseja consultar:
+### 1. Clone o repositório
 
 ```bash
-node index.js "Nome da Cidade"
+git clone https://github.com/Feersec/meu-clima.git
+cd meu-clima
+npm install
+```
+
+### 2. Crie uma chave no OpenWeatherMap
+
+Nunca coloque a chave diretamente no arquivo `index.js`.
+
+No **PowerShell**:
+
+```powershell
+$env:OPENWEATHER_API_KEY="SUA_CHAVE"
+node index.js "Peruíbe"
+```
+
+No **Linux/macOS**:
+
+```bash
+export OPENWEATHER_API_KEY="SUA_CHAVE"
+node index.js "Peruíbe"
+```
+
+## Segurança
+
+Credenciais, tokens e chaves de API não devem ser versionados no GitHub. O projeto lê a credencial a partir da variável de ambiente `OPENWEATHER_API_KEY`.
+
+## Objetivo do projeto
+
+Praticar integração com serviços externos, requisições HTTP, parâmetros de API, validação de entrada e tratamento de erros em Node.js.
+
+---
+
+**Autora:** Fernanda Ferreira Bernardo  
+Estudante de Engenharia de Software
